@@ -44,6 +44,11 @@ export default function Home() {
     e.preventDefault()
     if (!nombre || !precio || !stock) return alert('Por favor llena todos los campos')
 
+    // VALIDACIÓN NUEVA: Evitar números negativos
+    if (parseFloat(precio) < 0 || parseInt(stock) < 0) {
+      return alert('El precio y el stock no pueden ser números negativos')
+    }
+
     if (editingId) {
       // SI HAY UN ID, ESTAMOS EDITANDO (UPDATE)
       const { error } = await supabase
@@ -112,9 +117,9 @@ export default function Home() {
         
         <header className="mb-10 text-center md:text-left">
           <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight">
-            NanoWare <span className="text-blue-600">Dashboard</span>
+            Metrito <span className="text-blue-600">Dashboard</span>
           </h1>
-          <p className="text-gray-500 mt-2 text-lg">Gestión de inventario en tiempo real conectada a la nube</p>
+          <p className="text-gray-500 mt-2 text-lg">Gestión de inventario </p>
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -124,7 +129,7 @@ export default function Home() {
             <div className={`p-6 rounded-2xl shadow-sm border sticky top-8 transition-colors ${editingId ? 'bg-blue-50 border-blue-200' : 'bg-white border-gray-200'}`}>
               
               <h2 className="text-xl font-bold mb-5 text-gray-800">
-                {editingId ? '✏️ Editar Producto' : '📦 Nuevo Producto'}
+                {editingId ? ' Editar Producto' : ' Nuevo Producto'}
               </h2>
               
               <form onSubmit={guardarProducto} className="space-y-4">
@@ -144,6 +149,7 @@ export default function Home() {
                     <input 
                       type="number" 
                       step="0.01" 
+                      min="0" // NUEVO: Atributo HTML para bloquear en la interfaz
                       value={precio} 
                       onChange={(e) => setPrecio(e.target.value)} 
                       className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none transition bg-white" 
@@ -154,6 +160,7 @@ export default function Home() {
                     <label className="block text-sm font-semibold text-gray-600 mb-1">Stock</label>
                     <input 
                       type="number" 
+                      min="0" // NUEVO: Atributo HTML para bloquear en la interfaz
                       value={stock} 
                       onChange={(e) => setStock(e.target.value)} 
                       className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none transition bg-white" 
@@ -167,7 +174,7 @@ export default function Home() {
                     type="submit" 
                     className={`w-full text-white font-bold py-3 rounded-lg transition-colors shadow-sm ${editingId ? 'bg-orange-500 hover:bg-orange-600' : 'bg-blue-600 hover:bg-blue-700'}`}
                   >
-                    {editingId ? 'Actualizar Producto' : 'Guardar en Base de Datos'}
+                    {editingId ? 'Actualizar Producto' : 'Guardar Producto'}
                   </button>
                   
                   {/* Botón de cancelar que solo aparece si estamos editando */}
